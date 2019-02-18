@@ -934,11 +934,7 @@ func (e *executor) executeGroupBy(ctx context.Context, index string, c *pql.Call
 			return nil, errors.Wrap(err, "getting column")
 		}
 		if hasLimit || hasCol { // we need to perform this query cluster-wide ahead of executeGroupByShard
-startExecRows := time.Now()
-fmt.Printf("starting executeRows ... ")
 			childRows[i], err = e.executeRows(ctx, index, child, shards, opt)
-elapsedExecRows := time.Since(startExecRows)
-fmt.Printf("executeRows took %s for %#v\n", elapsedExecRows, childRows)
 			if err != nil {
 				return nil, errors.Wrap(err, "getting rows for ")
 			}
@@ -1028,8 +1024,8 @@ type GroupCount struct {
 // the fields of the group counts. It may modify its arguments.
 func mergeGroupCounts(a, b []GroupCount, limit int) []GroupCount {
 
-start := time.Now()
-fmt.Printf("starting mergeGroupCounts ... ")
+//start := time.Now()
+//fmt.Printf("starting mergeGroupCounts ... ")
 	if limit > len(a)+len(b) {
 		limit = len(a) + len(b)
 	}
@@ -1056,8 +1052,8 @@ fmt.Printf("starting mergeGroupCounts ... ")
 	for ; j < len(b) && len(ret) < limit; j++ {
 		ret = append(ret, b[j])
 	}
-elapsed := time.Since(start)
-fmt.Printf("mergeGroupCounts took %s.\n", elapsed)
+//elapsed := time.Since(start)
+//fmt.Printf("mergeGroupCounts took %s.\n", elapsed)
 	return ret
 }
 
@@ -1075,8 +1071,8 @@ func (g GroupCount) Compare(o GroupCount) int {
 
 func (e *executor) executeGroupByShard(ctx context.Context, index string, c *pql.Call, filter *pql.Call, shard uint64, childRows []RowIDs) (_ []GroupCount, err error) {
 
-start := time.Now()
-fmt.Printf("starting groupByShard ... ")
+//start := time.Now()
+//fmt.Printf("starting groupByShard ... ")
 	var filterRow *Row
 	if filter != nil {
 		if filterRow, err = e.executeBitmapCallShard(ctx, index, filter, shard); err != nil {
@@ -1100,17 +1096,34 @@ fmt.Printf("starting groupByShard ... ")
 	}
 
 	results := make([]GroupCount, 0)
+/*
+type FieldRow struct {
+        Field  string `json:"field"`
+        RowID  uint64 `json:"rowID"`
+        RowKey string `json:"rowKey,omitempty"`
+}
+type GroupCount struct {
+        Group []FieldRow `json:"group"`
+        Count uint64     `json:"count"`
+}
+*/
 
 	num := 0
 	for gc, done := iter.Next(); !done && num < limit; gc, done = iter.Next() {
 		if gc.Count > 0 {
 			num++
-			results = append(results, gc)
+			//results = append(results, gc)
 		}
 	}
 
-elapsed := time.Since(start)
-fmt.Printf("groupByShard took %s.\n", elapsed)
+        row := make([]FieldRow, 0)
+	row = append(row, FieldRow{Field: "num_user_id"})
+
+	cnt := GroupCount{Group: row, Count: uint64(num)}
+	results = append(results, cnt)
+
+//elapsed := time.Since(start)
+//fmt.Printf("groupByShard took %s.\n", elapsed)
 	return results, nil
 }
 
