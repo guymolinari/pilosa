@@ -1028,8 +1028,8 @@ type GroupCount struct {
 // the fields of the group counts. It may modify its arguments.
 func mergeGroupCounts(a, b []GroupCount, limit int) []GroupCount {
 
-//start := time.Now()
-//fmt.Printf("starting mergeGroupCounts ... ")
+start := time.Now()
+fmt.Printf("starting mergeGroupCounts ... ")
 	if limit > len(a)+len(b) {
 		limit = len(a) + len(b)
 	}
@@ -1056,8 +1056,8 @@ func mergeGroupCounts(a, b []GroupCount, limit int) []GroupCount {
 	for ; j < len(b) && len(ret) < limit; j++ {
 		ret = append(ret, b[j])
 	}
-//elapsed := time.Since(start)
-//fmt.Printf("mergeGroupCounts took %s.\n", elapsed)
+elapsed := time.Since(start)
+fmt.Printf("mergeGroupCounts took %s.\n", elapsed)
 	return ret
 }
 
@@ -1075,8 +1075,8 @@ func (g GroupCount) Compare(o GroupCount) int {
 
 func (e *executor) executeGroupByShard(ctx context.Context, index string, c *pql.Call, filter *pql.Call, shard uint64, childRows []RowIDs) (_ []GroupCount, err error) {
 
-//start := time.Now()
-//fmt.Printf("starting groupByShard ... ")
+start := time.Now()
+fmt.Printf("starting groupByShard ... ")
 	var filterRow *Row
 	if filter != nil {
 		if filterRow, err = e.executeBitmapCallShard(ctx, index, filter, shard); err != nil {
@@ -1109,8 +1109,8 @@ func (e *executor) executeGroupByShard(ctx context.Context, index string, c *pql
 		}
 	}
 
-//elapsed := time.Since(start)
-//fmt.Printf("groupByShard took %s.\n", elapsed)
+elapsed := time.Since(start)
+fmt.Printf("groupByShard took %s.\n", elapsed)
 	return results, nil
 }
 
