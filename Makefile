@@ -1,12 +1,12 @@
 .PHONY: build check-clean clean cover cover-viz default docker docker-build docker-test generate generate-protoc generate-pql gometalinter install install-build-deps install-gometalinter install-protoc install-protoc-gen-gofast install-peg prerelease prerelease-upload release release-build test
 
-CLONE_URL=github.com/pilosa/pilosa
+CLONE_URL=github.com/guymolinari/pilosa
 VERSION := $(shell git describe --tags 2> /dev/null || echo unknown)
 VERSION_ID = $(if $(ENTERPRISE_ENABLED),enterprise-)$(VERSION)-$(GOOS)-$(GOARCH)
 BRANCH := $(if $(TRAVIS_BRANCH),$(TRAVIS_BRANCH),$(if $(CIRCLE_BRANCH),$(CIRCLE_BRANCH),$(shell git rev-parse --abbrev-ref HEAD)))
 BRANCH_ID := $(BRANCH)-$(GOOS)-$(GOARCH)
 BUILD_TIME := $(shell date -u +%FT%T%z)
-LDFLAGS="-X github.com/pilosa/pilosa.Version=$(VERSION) -X github.com/pilosa/pilosa.BuildTime=$(BUILD_TIME) -X github.com/pilosa/pilosa.Enterprise=$(if $(ENTERPRISE_ENABLED),1)"
+LDFLAGS="-X github.com/guymolinari/pilosa.Version=$(VERSION) -X github.com/guymolinari/pilosa.BuildTime=$(BUILD_TIME) -X github.com/guymolinari/pilosa.Enterprise=$(if $(ENTERPRISE_ENABLED),1)"
 GO_VERSION=latest
 ENTERPRISE ?= 0
 ENTERPRISE_ENABLED = $(subst 0,,$(ENTERPRISE))
