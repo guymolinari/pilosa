@@ -935,7 +935,7 @@ func (e *executor) executeGroupBy(ctx context.Context, index string, c *pql.Call
 		}
 		if hasLimit || hasCol { // we need to perform this query cluster-wide ahead of executeGroupByShard
 startExecRows := time.Now()
-fmt.Printf("starting executeRows ... )
+fmt.Printf("starting executeRows ... ")
 			childRows[i], err = e.executeRows(ctx, index, child, shards, opt)
 elapsedExecRows := time.Since(startExecRows)
 fmt.Printf("executeRows took %s for %#v\n", elapsedExecRows, childRows)
