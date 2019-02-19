@@ -1169,7 +1169,10 @@ func (e *executor) executeRows(ctx context.Context, index string, c *pql.Call, s
 		return nil, err
 	}
 	results, _ := other.(RowIDs)
-	return results, nil
+	//return results, nil
+        r := make([]uint64, 0)
+        r = append(r, uint64(len(results)))
+        return r, nil
 }
 
 func (e *executor) executeRowsShard(_ context.Context, index string, fieldName string, c *pql.Call, shard uint64) (RowIDs, error) {
