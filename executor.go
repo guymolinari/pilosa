@@ -955,7 +955,7 @@ func (e *executor) executeGroupBy(ctx context.Context, index string, c *pql.Call
 	}
 	// Get full result set.
 startMapReduce := time.Now()
-fmt.Printf("starting group by mapReduce ... ")
+//fmt.Printf("starting group by mapReduce ... ")
 	other, err := e.mapReduce(ctx, index, shards, c, opt, mapFn, reduceFn)
 	if err != nil {
 		return nil, err
@@ -963,7 +963,7 @@ fmt.Printf("starting group by mapReduce ... ")
 	results, _ := other.([]GroupCount)
 
 elapsedMapReduce := time.Since(startMapReduce)
-fmt.Printf("mapReduce took %s.n", elapsedMapReduce)
+fmt.Printf("mapReduce took %s.\n", elapsedMapReduce)
 
 	// Apply offset.
 	if offset, hasOffset, err := c.UintArg("offset"); err != nil {
@@ -1071,8 +1071,8 @@ func (g GroupCount) Compare(o GroupCount) int {
 
 func (e *executor) executeGroupByShard(ctx context.Context, index string, c *pql.Call, filter *pql.Call, shard uint64, childRows []RowIDs) (_ []GroupCount, err error) {
 
-//start := time.Now()
-//fmt.Printf("starting groupByShard ... ")
+start := time.Now()
+fmt.Printf("starting groupByShard ... ")
 	var filterRow *Row
 	if filter != nil {
 		if filterRow, err = e.executeBitmapCallShard(ctx, index, filter, shard); err != nil {
@@ -1122,8 +1122,8 @@ type GroupCount struct {
 	cnt := GroupCount{Group: row, Count: uint64(num)}
 	results = append(results, cnt)
 
-//elapsed := time.Since(start)
-//fmt.Printf("groupByShard took %s.\n", elapsed)
+elapsed := time.Since(start)
+fmt.Printf("groupByShard took %s.\n", elapsed)
 	return results, nil
 }
 
@@ -1169,10 +1169,7 @@ func (e *executor) executeRows(ctx context.Context, index string, c *pql.Call, s
 		return nil, err
 	}
 	results, _ := other.(RowIDs)
-	//return results, nil
-        r := make([]uint64, 0)
-        r = append(r, uint64(len(results)))
-        return r, nil
+	return results, nil
 }
 
 func (e *executor) executeRowsShard(_ context.Context, index string, fieldName string, c *pql.Call, shard uint64) (RowIDs, error) {
