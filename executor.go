@@ -1071,8 +1071,8 @@ func (g GroupCount) Compare(o GroupCount) int {
 
 func (e *executor) executeGroupByShard(ctx context.Context, index string, c *pql.Call, filter *pql.Call, shard uint64, childRows []RowIDs) (_ []GroupCount, err error) {
 
-start := time.Now()
-fmt.Printf("starting groupByShard ... ")
+//start := time.Now()
+//fmt.Printf("starting groupByShard ... ")
 	var filterRow *Row
 	if filter != nil {
 		if filterRow, err = e.executeBitmapCallShard(ctx, index, filter, shard); err != nil {
@@ -1112,18 +1112,20 @@ type GroupCount struct {
 	for gc, done := iter.Next(); !done && num < limit; gc, done = iter.Next() {
 		if gc.Count > 0 {
 			num++
-			//results = append(results, gc)
+			results = append(results, gc)
 		}
 	}
 
+/*
         row := make([]FieldRow, 0)
 	row = append(row, FieldRow{Field: "num_user_id"})
 
 	cnt := GroupCount{Group: row, Count: uint64(num)}
 	results = append(results, cnt)
+*/
 
-elapsed := time.Since(start)
-fmt.Printf("groupByShard took %s.\n", elapsed)
+//elapsed := time.Since(start)
+//fmt.Printf("groupByShard took %s.\n", elapsed)
 	return results, nil
 }
 
