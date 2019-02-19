@@ -962,6 +962,21 @@ startMapReduce := time.Now()
 	}
 	results, _ := other.([]GroupCount)
 
+num := len(results)
+name := "num_user_id"
+if num > 0 {
+    name = results[0].Group[0].Field
+}
+
+results = make([]GroupCount, 0)
+
+row := make([]FieldRow, 0)
+row = append(row, FieldRow{Field: name})
+
+cnt := GroupCount{Group: row, Count: uint64(num)}
+results = append(results, cnt)
+
+
 elapsedMapReduce := time.Since(startMapReduce)
 fmt.Printf("mapReduce took %s.\n", elapsedMapReduce)
 
