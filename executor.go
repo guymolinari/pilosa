@@ -954,7 +954,7 @@ func (e *executor) executeGroupBy(ctx context.Context, index string, c *pql.Call
 		return mergeGroupCounts(other, v.([]GroupCount), limit)
 	}
 	// Get full result set.
-startMapReduce := time.Now()
+//startMapReduce := time.Now()
 //fmt.Printf("starting group by mapReduce ... ")
 	other, err := e.mapReduce(ctx, index, shards, c, opt, mapFn, reduceFn)
 	if err != nil {
@@ -962,6 +962,7 @@ startMapReduce := time.Now()
 	}
 	results, _ := other.([]GroupCount)
 
+/*
 num := len(results)
 name := "num_user_id"
 if num > 0 {
@@ -979,6 +980,7 @@ results = append(results, cnt)
 
 elapsedMapReduce := time.Since(startMapReduce)
 fmt.Printf("mapReduce took %s.\n", elapsedMapReduce)
+*/
 
 	// Apply offset.
 	if offset, hasOffset, err := c.UintArg("offset"); err != nil {
